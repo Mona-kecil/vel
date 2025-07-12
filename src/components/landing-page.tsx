@@ -49,6 +49,13 @@ const scaleOnHover = {
 	},
 };
 
+/**
+ * Renders the animated, multi-section landing page for the Vel payment platform.
+ *
+ * The landing page includes navigation, hero, features, statistics, testimonials, call-to-action, and footer sections. It integrates wallet connection status, parallax and scroll-based animations, and responsive layouts to provide an interactive user experience.
+ *
+ * @returns The complete landing page React element.
+ */
 export default function LandingPage() {
 	const [isVisible, setIsVisible] = useState(false);
 	const { scrollYProgress } = useScroll();

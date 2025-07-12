@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 	description: "Platform pembayaran lintas batas untuk Indonesia",
 };
 
+/**
+ * Root layout component that sets up global styles, font, and Web3 context for the application.
+ *
+ * Wraps all page content with the Inter font, applies a gray background, and provides the Web3 context to descendants.
+ *
+ * @param children - The content to be rendered within the layout
+ */
 export default function RootLayout({
 	children,
 }: {
