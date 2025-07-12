@@ -8,6 +8,13 @@ import { polygonAmoy } from "viem/chains";
 import { type Config, WagmiProvider } from "wagmi";
 import { env } from "~/env";
 
+/**
+ * Provides Web3, query management, and theming context to its child components.
+ *
+ * Wraps children with Wagmi, React Query, and XellarKit providers, configuring blockchain connectivity and UI theme for the application.
+ *
+ * @param children - The React nodes to render within the provider context
+ */
 export default function Web3Provider({ children }: { children: ReactNode }) {
 	const config = useMemo(() => {
 		const xellarAppId = env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
