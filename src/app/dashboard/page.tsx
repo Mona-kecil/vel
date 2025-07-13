@@ -1,5 +1,6 @@
 "use client";
 
+import { useXellarAccount } from "@xellar/kit";
 import {
 	Activity,
 	ArrowRight,
@@ -190,6 +191,9 @@ function useSidebarContext() {
 
 export default function DashboardPage() {
 	const [currentScreen, setCurrentScreen] = useState<Screen>("dashboard");
+	const xellarAccount = useXellarAccount();
+
+	console.log(`Xellar account: ${JSON.stringify(xellarAccount, null, 2)}`);
 
 	const formatIDR = (amount: number) => {
 		return new Intl.NumberFormat("id-ID", {
