@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import "~/styles/globals.css";
-import Web3Provider from "~/components/xellar-provider";
+import Web3Provider from "~/components/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 

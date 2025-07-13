@@ -19,6 +19,7 @@ export const env = createEnv({
 	client: {
 		NEXT_PUBLIC_XELLAR_PROJECT_ID: z.string(),
 		NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: z.string(),
+		NEXT_PUBLIC_CONVEX_URL: z.string(),
 		// NEXT_PUBLIC_CLIENTVAR: z.string(),
 	},
 
@@ -32,6 +33,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID:
 			process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 		NEXT_PUBLIC_XELLAR_PROJECT_ID: process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID,
+		NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
 		// NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 	},
 	/**
