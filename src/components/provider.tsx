@@ -18,7 +18,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 			appName: "Xellar",
 			walletConnectProjectId,
 			xellarAppId,
-			xellarEnv: "sandbox",
+			xellarEnv: "production",
 			chains: [polygonAmoy],
 			ssr: true,
 		}) as Config;
