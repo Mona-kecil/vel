@@ -9,6 +9,7 @@ export const env = createEnv({
 	server: {
 		NODE_ENV: z.enum(["development", "test", "production"]),
 		XELLAR_CLIENT_SECRET: z.string(),
+		XELLAR_ENV: z.enum(["sandbox", "production"]),
 	},
 
 	/**
@@ -30,6 +31,7 @@ export const env = createEnv({
 	runtimeEnv: {
 		NODE_ENV: process.env.NODE_ENV,
 		XELLAR_CLIENT_SECRET: process.env.XELLAR_CLIENT_SECRET,
+		XELLAR_ENV: process.env.XELLAR_ENV,
 		NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID:
 			process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 		NEXT_PUBLIC_XELLAR_PROJECT_ID: process.env.NEXT_PUBLIC_XELLAR_PROJECT_ID,

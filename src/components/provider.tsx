@@ -13,12 +13,13 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 	const config = useMemo(() => {
 		const xellarAppId = env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
 		const walletConnectProjectId = env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
+		const xellarEnv = env.XELLAR_ENV;
 
 		return defaultConfig({
 			appName: "Xellar",
 			walletConnectProjectId,
 			xellarAppId,
-			xellarEnv: "production",
+			xellarEnv,
 			chains: [polygonAmoy],
 			ssr: true,
 		}) as Config;

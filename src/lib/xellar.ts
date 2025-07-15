@@ -4,7 +4,7 @@ import { env } from "~/env";
 const xellar = new XellarSDK({
 	clientSecret: env.XELLAR_CLIENT_SECRET,
 	appId: env.NEXT_PUBLIC_XELLAR_PROJECT_ID,
-	env: "sandbox",
+	env: env.XELLAR_ENV,
 });
 
 export default xellar;
