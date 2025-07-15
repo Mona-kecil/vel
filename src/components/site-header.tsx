@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarIcon } from "lucide-react";
+import { Bell, SidebarIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { SearchForm } from "~/components/search-form";
@@ -44,7 +44,7 @@ export function SiteHeader() {
 				<Breadcrumb className="hidden sm:block">
 					<BreadcrumbList>
 						{breadcrumbItems.map((item, index) => (
-							<BreadcrumbItem key={index} className="capitalize">
+							<BreadcrumbItem key={item.href} className="capitalize">
 								{index === breadcrumbItems.length - 1 ? (
 									<BreadcrumbPage>{item.label}</BreadcrumbPage>
 								) : (
@@ -55,8 +55,12 @@ export function SiteHeader() {
 						))}
 					</BreadcrumbList>
 				</Breadcrumb>
-
-				<SearchForm className="w-full sm:ml-auto sm:w-auto" />
+				<div className="ml-auto flex items-center gap-2">
+					<Button variant="ghost" size="icon">
+						<Bell className="h-5 w-5" />
+					</Button>
+					<SearchForm className="w-full sm:ml-auto sm:w-auto" />
+				</div>
 			</div>
 		</header>
 	);

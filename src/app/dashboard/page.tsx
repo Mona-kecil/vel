@@ -3,7 +3,6 @@
 import {
 	Activity,
 	ArrowRight,
-	Bell,
 	CreditCard,
 	DollarSign,
 	HelpCircle,
@@ -39,8 +38,16 @@ const formatIDR = (amount: number) => {
 		.replace("IDR", "Rp");
 };
 
+type Transaction = {
+	date: string;
+	description: string;
+	amount: number;
+	status: string;
+	type: "income" | "withdrawal";
+};
+
 export default function DashboardPage() {
-	const transactions = [
+	const transactions: Transaction[] = [
 		{
 			date: "10 Juli 2025",
 			description: "Pembayaran Pesanan #1234",
@@ -90,7 +97,6 @@ export default function DashboardPage() {
 			<div className="flex min-h-screen bg-gray-50">
 				<main className="flex-1 p-6">
 					<Header />
-
 					<div className="space-y-6">
 						<KeyMetrics />
 					</div>
@@ -106,23 +112,13 @@ function Header() {
 		<header className="flex h-16 items-center justify-between border-gray-200 border-b bg-white px-6">
 			<div className="flex items-center gap-4">
 				<div>
-					<h1 className="font-semibold text-[#243B55] text-xl">Dashboard</h1>
-					<p className="text-gray-500 text-sm">
-						Selamat datang kembali, Toko Saya
-					</p>
+					<h1 className="font-bold text-2xl text-foreground">Welcome back</h1>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
 				<Button size="sm" className="bg-[#4CAF50] hover:bg-[#45a049]">
 					<Plus className="mr-2 h-4 w-4" />
 					Buat Pembayaran
-				</Button>
-				<Button
-					variant="ghost"
-					size="icon"
-					className="text-gray-600 hover:text-gray-900"
-				>
-					<Bell className="h-5 w-5" />
 				</Button>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -294,7 +290,7 @@ function QuickActions() {
 	);
 }
 
-function RecentTransactions({ transactions }: { transactions: any[] }) {
+function RecentTransactions({ transactions }: { transactions: Transaction[] }) {
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between">
@@ -308,9 +304,9 @@ function RecentTransactions({ transactions }: { transactions: any[] }) {
 			</CardHeader>
 			<CardContent>
 				<div className="space-y-0">
-					{transactions.slice(0, 6).map((tx, index) => (
+					{transactions.slice(0, 6).map((tx) => (
 						<div
-							key={index}
+							key={tx.date}
 							className="-mx-6 flex items-center justify-between border-gray-100 border-b px-6 py-4 last:border-0 hover:bg-gray-50"
 						>
 							<div className="flex items-center gap-4">
