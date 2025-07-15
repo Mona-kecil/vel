@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 import {
 	Collapsible,
@@ -11,7 +12,6 @@ import {
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarMenu,
-	SidebarMenuAction,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarMenuSub,
@@ -25,7 +25,6 @@ export function NavMain({
 	items: {
 		title: string;
 		icon: LucideIcon;
-		url?: string;
 		isActive?: boolean;
 		items?: {
 			title: string;
@@ -50,10 +49,8 @@ export function NavMain({
 								</CollapsibleTrigger>
 							) : (
 								<SidebarMenuButton asChild tooltip={item.title}>
-									<a href={item.url}>
-										<item.icon />
-										<span>{item.title}</span>
-									</a>
+									<item.icon />
+									<span>{item.title}</span>
 								</SidebarMenuButton>
 							)}
 							{item.items?.length ? (
@@ -62,9 +59,9 @@ export function NavMain({
 										{item.items?.map((subItem) => (
 											<SidebarMenuSubItem key={subItem.title}>
 												<SidebarMenuSubButton asChild>
-													<a href={subItem.url}>
+													<Link href={subItem.url}>
 														<span>{subItem.title}</span>
-													</a>
+													</Link>
 												</SidebarMenuSubButton>
 											</SidebarMenuSubItem>
 										))}

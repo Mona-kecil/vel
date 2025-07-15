@@ -13,7 +13,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 	const config = useMemo(() => {
 		const xellarAppId = env.NEXT_PUBLIC_XELLAR_PROJECT_ID;
 		const walletConnectProjectId = env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
-		const xellarEnv = env.XELLAR_ENV;
+		const xellarEnv = env.NEXT_PUBLIC_XELLAR_ENV;
 
 		return defaultConfig({
 			appName: "Xellar",
@@ -26,7 +26,10 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 	}, []);
 
 	const queryClient = useMemo(() => new QueryClient(), []);
-	const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL);
+	const convex = useMemo(
+		() => new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL),
+		[],
+	);
 
 	return (
 		<WagmiProvider config={config}>

@@ -2,7 +2,6 @@
 
 import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
 
-import { useXellarAccount } from "@xellar/kit";
 import { useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";

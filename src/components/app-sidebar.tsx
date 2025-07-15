@@ -1,19 +1,11 @@
 "use client";
 
 import {
-	Banknote,
-	BarChart2,
 	Briefcase,
-	CreditCard,
 	LayoutDashboard,
 	LifeBuoy,
 	MessageCircle,
-	Repeat,
-	Settings,
-	Shield,
 	UserCircle,
-	Users,
-	Wallet,
 } from "lucide-react";
 import type * as React from "react";
 
@@ -26,7 +18,6 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarMenu,
-	SidebarMenuButton,
 	SidebarMenuItem,
 } from "~/components/ui/sidebar";
 
@@ -44,19 +35,19 @@ const data = {
 			items: [
 				{
 					title: "Dashboard",
-					url: "#",
+					url: "/dashboard",
 				},
 				{
 					title: "Transaction",
-					url: "#",
+					url: "/transactions",
 				},
 				{
 					title: "Payments",
-					url: "#",
+					url: "/payments",
 				},
 				{
 					title: "Withdrawals",
-					url: "#",
+					url: "/withdrawals",
 				},
 			],
 		},
@@ -66,11 +57,11 @@ const data = {
 			items: [
 				{
 					title: "Customers",
-					url: "#",
+					url: "/customers",
 				},
 				{
 					title: "Analytics",
-					url: "#",
+					url: "/analytics",
 				},
 			],
 		},
@@ -80,15 +71,15 @@ const data = {
 			items: [
 				{
 					title: "Settings",
-					url: "#",
+					url: "/account/settings",
 				},
 				{
 					title: "Security",
-					url: "#",
+					url: "/account/security",
 				},
 				{
 					title: "Connected Wallets",
-					url: "#",
+					url: "/account/wallets",
 				},
 			],
 		},
@@ -116,15 +107,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							<a href="#">
-								<div className="grid flex-1">
-									<span className="truncate text-center font-bold font-sans text-2xl tracking-widest">
-										Vel
-									</span>
-								</div>
-							</a>
-						</SidebarMenuButton>
+						<div className="grid flex-1">
+							<span className="truncate text-center font-bold font-sans text-2xl tracking-widest">
+								Vel
+							</span>
+						</div>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
