@@ -14,6 +14,7 @@ import {
 	Users,
 } from "lucide-react";
 import React from "react";
+import { ProtectedLayout } from "~/components/layouts/ProtectedLayout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -27,16 +28,26 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
+const currencyFormatter = new Intl.NumberFormat("id-ID", {
+	style: "currency",
+	currency: "IDR",
+	currencyDisplay: "code",
+	maximumFractionDigits: 0,
+});
+
 const formatIDR = (amount: number) => {
-	return new Intl.NumberFormat("id-ID", {
-		style: "currency",
-		currency: "IDR",
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
-	})
-		.format(amount)
-		.replace("IDR", "Rp");
+	return currencyFormatter.format(amount);
 };
+
+const percentageFormatter = new Intl.NumberFormat("ID-id", {
+	style: "percent",
+	maximumFractionDigits: 1,
+	signDisplay: "always",
+});
+
+const formatPercentage = (value: number) => {
+	return percentageFormatter.format(value);
+}
 
 type Transaction = {
 	date: string;
@@ -47,6 +58,17 @@ type Transaction = {
 };
 
 export default function DashboardPage() {
+	const metrics = {
+		totalBalance: 2000000,
+		totalBalanceLastMonth: 1650000,
+		totalRevenue: 750000,
+		totalRevenueLastMonth: 800000,
+		totalTransactions: 30,
+		totalTransactionsLastMonth: 33,
+		totalCustomers: 25,
+		totalCustomersLastMonth: 27,
+	};
+
 	const transactions: Transaction[] = [
 		{
 			date: "10 Juli 2025",
@@ -92,155 +114,146 @@ export default function DashboardPage() {
 		},
 	];
 
-	return (
-		<div>
-			<div className="flex min-h-screen bg-gray-50">
-				<main className="flex-1 p-6">
-					<Header />
-					<div className="space-y-6">
-						<KeyMetrics />
-					</div>
-					<RecentTransactions transactions={transactions} />
-				</main>
-			</div>
-		</div>
-	);
-}
+	/** Convex useQuery call
+	 * const metrics = useQuery(api.dashboard.getMetrics(), {}); probably we need to enter userID somewhere.
+	 * const transactions = useQuery(api.transactions.getTransactions(), {});
+	 */
 
-function Header() {
 	return (
-		<header className="flex h-16 items-center justify-between border-gray-200 border-b bg-white px-6">
-			<div className="flex items-center gap-4">
-				<div>
-					<h1 className="font-bold text-2xl text-foreground">Welcome back</h1>
+		<ProtectedLayout>
+			<div className="space-y-6">
+				<div className="gap-6 mb-6">
+					<KeyMetrics metrics={metrics} />
 				</div>
+				<RecentTransactionsCard transactions={transactions} />
 			</div>
-			<div className="flex items-center gap-4">
-				<Button size="sm" className="bg-[#4CAF50] hover:bg-[#45a049]">
-					<Plus className="mr-2 h-4 w-4" />
-					Buat Pembayaran
-				</Button>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant="ghost" className="flex items-center gap-2">
-							<Avatar className="h-8 w-8">
-								<AvatarFallback className="bg-[#4CAF50] text-sm text-white">
-									TS
-								</AvatarFallback>
-							</Avatar>
-							<span className="font-medium">Toko Saya</span>
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end" className="w-56">
-						<DropdownMenuLabel>Akun Saya</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>
-							<Settings className="mr-2 h-4 w-4" />
-							Pengaturan
-						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<HelpCircle className="mr-2 h-4 w-4" />
-							Bantuan
-						</DropdownMenuItem>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem className="text-red-600">
-							<LogOut className="mr-2 h-4 w-4" />
-							Keluar
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			</div>
-		</header>
+		</ProtectedLayout>
 	);
 }
 
-function KeyMetrics() {
+function KeyMetrics({ metrics }: { metrics: {
+	totalBalance: number;
+	totalRevenue: number;
+	totalTransactions: number;
+	totalCustomers: number;
+	totalBalanceLastMonth: number;
+	totalRevenueLastMonth: number;
+	totalTransactionsLastMonth: number;
+	totalCustomersLastMonth: number;
+} }) {
 	return (
-		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-			<Card className="border-l-4 border-l-[#4CAF50]">
+		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+			{/* Current Balance Card - Featured as primary metric */}
+			<Card 
+				animation="hover"
+				className="group relative overflow-hidden border-0 bg-primary text-primary-foreground shadow-lg sm:col-span-2 xl:col-span-1"
+			>
 				<CardContent className="p-6">
 					<div className="flex items-center justify-between">
-						<div>
-							<p className="font-medium text-gray-600 text-sm">Total Saldo</p>
-							<p className="font-bold text-3xl text-[#243B55]">
-								{formatIDR(1234567)}
+						<div className="space-y-1">
+							<p className="text-primary-foreground/80 text-sm font-medium">Total Saldo</p>
+							<p className="text-3xl font-bold">
+								{formatIDR(metrics.totalBalance)}
 							</p>
 						</div>
-						<div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#4CAF50]/10">
-							<DollarSign className="h-6 w-6 text-[#4CAF50]" />
+						<div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/20 backdrop-blur-sm">
+							<DollarSign className="h-7 w-7 text-primary-foreground" />
 						</div>
 					</div>
+					{/* TODO: Add percentage change */}
 					<div className="mt-4 flex items-center">
-						<TrendingUp className="mr-1 h-4 w-4 text-[#4CAF50]" />
-						<span className="font-medium text-[#4CAF50] text-sm">+12.5%</span>
-						<span className="ml-2 text-gray-500 text-sm">dari bulan lalu</span>
+						<TrendingUp className="mr-2 h-4 w-4 text-primary-foreground" />
+						<span className="text-sm font-medium text-primary-foreground">
+							{formatPercentage((metrics.totalBalance - metrics.totalBalanceLastMonth) / metrics.totalBalanceLastMonth)}
+						</span>
+						<span className="ml-2 text-primary-foreground/70 text-sm">dari bulan lalu</span>
 					</div>
 				</CardContent>
 			</Card>
 
-			<Card>
+			{/* Monthly Revenue Card */}
+			<Card animation="hover" className="group border-0 shadow-md">
 				<CardContent className="p-6">
 					<div className="flex items-center justify-between">
-						<div>
-							<p className="font-medium text-gray-600 text-sm">
+						<div className="space-y-1">
+							<p className="text-muted-foreground text-sm font-medium">
 								Pendapatan Bulan Ini
 							</p>
-							<p className="font-bold text-3xl text-[#243B55]">
-								{formatIDR(450000)}
+							<p className="text-3xl font-bold text-foreground">
+								{formatIDR(metrics.totalRevenue)}
 							</p>
 						</div>
-						<div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
-							<TrendingUp className="h-6 w-6 text-blue-600" />
+						<div className="flex h-14 w-14 items-center justify-center rounded-full bg-chart-2/10 transition-all duration-300 group-hover:bg-chart-2/20">
+							<TrendingUp className="h-7 w-7 text-chart-2" />
 						</div>
 					</div>
+					{/* TODO: Add percentage change */}
 					<div className="mt-4 flex items-center">
-						<TrendingUp className="mr-1 h-4 w-4 text-[#4CAF50]" />
-						<span className="font-medium text-[#4CAF50] text-sm">+8.2%</span>
-						<span className="ml-2 text-gray-500 text-sm">dari bulan lalu</span>
+						<div className="flex items-center rounded-full bg-chart-1/10 px-2 py-1">
+							<TrendingUp className="mr-1 h-3 w-3 text-chart-1" />
+							<span className="text-chart-1 text-xs font-medium">
+								{formatPercentage((metrics.totalRevenue - metrics.totalRevenueLastMonth) / metrics.totalRevenueLastMonth)}
+							</span>
+						</div>
+						<span className="ml-2 text-muted-foreground text-sm">dari bulan lalu</span>
 					</div>
 				</CardContent>
 			</Card>
 
-			<Card>
+			{/* Transaction Count Card */}
+			<Card animation="hover" className="group border-0 shadow-md">
 				<CardContent className="p-6">
 					<div className="flex items-center justify-between">
-						<div>
-							<p className="font-medium text-gray-600 text-sm">
+						<div className="space-y-1">
+							<p className="text-muted-foreground text-sm font-medium">
 								Total Transaksi
 							</p>
-							<p className="font-bold text-3xl text-[#243B55]">24</p>
+							<p className="text-3xl font-bold text-foreground">
+								{metrics.totalTransactions}
+							</p>
 						</div>
-						<div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-50">
-							<Activity className="h-6 w-6 text-purple-600" />
+						<div className="flex h-14 w-14 items-center justify-center rounded-full bg-chart-4/10 transition-all duration-300 group-hover:bg-chart-4/20">
+							<Activity className="h-7 w-7 text-chart-4" />
 						</div>
 					</div>
+					{/* TODO: Add percentage change */}
 					<div className="mt-4 flex items-center">
-						<TrendingUp className="mr-1 h-4 w-4 text-[#4CAF50]" />
-						<span className="font-medium text-[#4CAF50] text-sm">+15.3%</span>
-						<span className="ml-2 text-gray-500 text-sm">dari bulan lalu</span>
+						<div className="flex items-center rounded-full bg-chart-1/10 px-2 py-1">
+							<TrendingUp className="mr-1 h-3 w-3 text-chart-1" />
+							<span className="text-chart-1 text-xs font-medium">
+								{formatPercentage((metrics.totalTransactions - metrics.totalTransactionsLastMonth) / metrics.totalTransactionsLastMonth)}
+							</span>
+						</div>
+						<span className="ml-2 text-muted-foreground text-sm">dari bulan lalu</span>
 					</div>
 				</CardContent>
 			</Card>
 
-			<QuickActions />
-
-			<Card>
+			{/* Active Customers Card */}
+			<Card animation="hover" className="group border-0 shadow-md">
 				<CardContent className="p-6">
 					<div className="flex items-center justify-between">
-						<div>
-							<p className="font-medium text-gray-600 text-sm">
+						<div className="space-y-1">
+							<p className="text-muted-foreground text-sm font-medium">
 								Pelanggan Aktif
 							</p>
-							<p className="font-bold text-3xl text-[#243B55]">12</p>
+							<p className="text-3xl font-bold text-foreground">
+								{metrics.totalCustomers}
+							</p>
 						</div>
-						<div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-50">
-							<Users className="h-6 w-6 text-orange-600" />
+						<div className="flex h-14 w-14 items-center justify-center rounded-full bg-chart-5/10 transition-all duration-300 group-hover:bg-chart-5/20">
+							<Users className="h-7 w-7 text-chart-5" />
 						</div>
 					</div>
+					{/* TODO: Add percentage change */}
 					<div className="mt-4 flex items-center">
-						<TrendingUp className="mr-1 h-4 w-4 text-[#4CAF50]" />
-						<span className="font-medium text-[#4CAF50] text-sm">+5.1%</span>
-						<span className="ml-2 text-gray-500 text-sm">dari bulan lalu</span>
+						<div className="flex items-center rounded-full bg-chart-1/10 px-2 py-1">
+							<TrendingUp className="mr-1 h-3 w-3 text-chart-1" />
+							<span className="text-chart-1 text-xs font-medium">
+								{formatPercentage((metrics.totalCustomers - metrics.totalCustomersLastMonth) / metrics.totalCustomersLastMonth)}
+							</span>
+						</div>
+						<span className="ml-2 text-muted-foreground text-sm">dari bulan lalu</span>
 					</div>
 				</CardContent>
 			</Card>
@@ -248,88 +261,89 @@ function KeyMetrics() {
 	);
 }
 
-function QuickActions() {
-	return (
-		<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-			<Card className="cursor-pointer transition-shadow hover:shadow-md">
-				<CardContent className="p-6">
-					<div className="flex items-center gap-4">
-						<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#4CAF50]/10">
-							<QrCode className="h-6 w-6 text-[#4CAF50]" />
-						</div>
-						<div className="flex-1">
-							<h3 className="font-semibold text-[#243B55]">
-								Terima Pembayaran
-							</h3>
-							<p className="text-gray-600 text-sm">
-								Buat link atau QR code untuk menerima pembayaran
-							</p>
-						</div>
-						<ArrowRight className="h-5 w-5 text-gray-400" />
-					</div>
-				</CardContent>
-			</Card>
+// This feature is not yet supported since rampable doesn't support off-ramp from Lisk chain
+// function QuickActions() {
+// 	return (
+// 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+// 			<Card className="cursor-pointer transition-shadow hover:shadow-md">
+// 				<CardContent className="p-6">
+// 					<div className="flex items-center gap-4">
+// 						<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#4CAF50]/10">
+// 							<QrCode className="h-6 w-6 text-[#4CAF50]" />
+// 						</div>
+// 						<div className="flex-1">
+// 							<h3 className="font-semibold text-[#243B55]">
+// 								Terima Pembayaran
+// 							</h3>
+// 							<p className="text-gray-600 text-sm">
+// 								Buat link atau QR code untuk menerima pembayaran
+// 							</p>
+// 						</div>
+// 						<ArrowRight className="h-5 w-5 text-gray-400" />
+// 					</div>
+// 				</CardContent>
+// 			</Card>
 
-			<Card className="cursor-pointer transition-shadow hover:shadow-md">
-				<CardContent className="p-6">
-					<div className="flex items-center gap-4">
-						<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#243B55]/10">
-							<CreditCard className="h-6 w-6 text-[#243B55]" />
-						</div>
-						<div className="flex-1">
-							<h3 className="font-semibold text-[#243B55]">Tarik Dana</h3>
-							<p className="text-gray-600 text-sm">
-								Cairkan saldo Anda ke rekening bank
-							</p>
-						</div>
-						<ArrowRight className="h-5 w-5 text-gray-400" />
-					</div>
-				</CardContent>
-			</Card>
-		</div>
-	);
-}
+// 			<Card className="cursor-pointer transition-shadow hover:shadow-md">
+// 				<CardContent className="p-6">
+// 					<div className="flex items-center gap-4">
+// 						<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#243B55]/10">
+// 							<CreditCard className="h-6 w-6 text-[#243B55]" />
+// 						</div>
+// 						<div className="flex-1">
+// 							<h3 className="font-semibold text-[#243B55]">Tarik Dana</h3>
+// 							<p className="text-gray-600 text-sm">
+// 								Cairkan saldo Anda ke rekening bank
+// 							</p>
+// 						</div>
+// 						<ArrowRight className="h-5 w-5 text-gray-400" />
+// 					</div>
+// 				</CardContent>
+// 			</Card>
+// 		</div>
+// 	);
+// }
 
-function RecentTransactions({ transactions }: { transactions: Transaction[] }) {
+function RecentTransactionsCard({ transactions }: { transactions: Transaction[] }) {
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between">
-				<CardTitle className="text-[#243B55] text-xl">
+				<CardTitle className="text-foreground text-xl">
 					Transaksi Terbaru
 				</CardTitle>
-				<Button variant="ghost" className="text-[#4CAF50] hover:text-[#45a049]">
+				<Button variant="ghost" className="text-chart-1 hover:text-chart-1/80">
 					Lihat Semua
 					<ArrowRight className="ml-2 h-4 w-4" />
 				</Button>
 			</CardHeader>
 			<CardContent>
 				<div className="space-y-0">
-					{transactions.slice(0, 6).map((tx) => (
+					{transactions.map((tx) => (
 						<div
 							key={tx.date}
-							className="-mx-6 flex items-center justify-between border-gray-100 border-b px-6 py-4 last:border-0 hover:bg-gray-50"
+							className="-mx-6 flex items-center justify-between border-border border-b px-6 py-4 last:border-0 hover:bg-muted/50"
 						>
 							<div className="flex items-center gap-4">
 								<div
 									className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-										tx.type === "income" ? "bg-[#4CAF50]/10" : "bg-red-50"
+										tx.type === "income" ? "bg-chart-1/10" : "bg-destructive/10"
 									}`}
 								>
 									{tx.type === "income" ? (
-										<ArrowRight className="h-5 w-5 rotate-[-45deg] text-[#4CAF50]" />
+										<ArrowRight className="h-5 w-5 rotate-[-45deg] text-chart-1" />
 									) : (
-										<ArrowRight className="h-5 w-5 rotate-[135deg] text-red-500" />
+										<ArrowRight className="h-5 w-5 rotate-[135deg] text-destructive" />
 									)}
 								</div>
 								<div>
-									<p className="font-medium text-gray-900">{tx.description}</p>
-									<p className="text-gray-500 text-sm">{tx.date}</p>
+									<p className="font-medium text-foreground">{tx.description}</p>
+									<p className="text-muted-foreground text-sm">{tx.date}</p>
 								</div>
 							</div>
 							<div className="text-right">
 								<p
 									className={`font-semibold ${
-										tx.type === "income" ? "text-[#4CAF50]" : "text-red-500"
+										tx.type === "income" ? "text-chart-1" : "text-destructive"
 									}`}
 								>
 									{tx.type === "income" ? "+" : ""}
