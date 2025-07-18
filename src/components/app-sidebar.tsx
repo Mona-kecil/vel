@@ -58,10 +58,12 @@ const data = {
 				{
 					title: "Customers",
 					url: "/customers",
+					disabled: true,
 				},
 				{
 					title: "Analytics",
 					url: "/analytics",
+					disabled: true,
 				},
 			],
 		},
@@ -72,14 +74,17 @@ const data = {
 				{
 					title: "Settings",
 					url: "/account/settings",
+					disabled: true,
 				},
 				{
 					title: "Security",
 					url: "/account/security",
+					disabled: true,
 				},
 				{
 					title: "Connected Wallets",
 					url: "/account/wallets",
+					disabled: true,
 				},
 			],
 		},

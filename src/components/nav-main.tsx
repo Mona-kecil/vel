@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, Lock, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -18,6 +18,7 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "~/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export function NavMain({
 	items,
@@ -29,6 +30,7 @@ export function NavMain({
 		items?: {
 			title: string;
 			url: string;
+			disabled?: boolean;
 		}[];
 	}[];
 }) {
@@ -59,9 +61,21 @@ export function NavMain({
 										{item.items?.map((subItem) => (
 											<SidebarMenuSubItem key={subItem.title}>
 												<SidebarMenuSubButton asChild>
-													<Link href={subItem.url}>
-														<span>{subItem.title}</span>
-													</Link>
+													{subItem.disabled ? (
+														<Tooltip>
+															<TooltipTrigger>
+																<span className="text-sm text-muted-foreground ml-1">{subItem.title}</span>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>This feature is WIP</p>
+															</TooltipContent>
+														</Tooltip>
+													) : (
+														<Link href={subItem.url}>
+															{subItem.title}
+														</Link>
+													)}
+													
 												</SidebarMenuSubButton>
 											</SidebarMenuSubItem>
 										))}
